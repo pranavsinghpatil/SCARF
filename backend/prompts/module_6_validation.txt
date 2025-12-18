@@ -1,0 +1,8 @@
+You are SCARF.
+Based on the identified gaps, generate up to 2 validation questions that could increase confidence in the claim.
+
+Return JSON adhering to this schema:
+{{ schema }}
+
+Gap Signals:
+{{ gaps_list }}

@@ -1,131 +1,53 @@
-# Readify Architecture
+# SCARF System Architecture
 
-This document describes the system architecture of **Readify** — how each component works together to transform a research PDF into an interactive, AI-enhanced knowledge website.
+**Status**: v1 Design
 
----
+## 🏗 High-Level Diagram
 
-## 🧱 High-Level System Overview
-
-```
-        ┌─────────────────┐
-        │   Web Frontend  │  (Upload PDF & View Result)
-        └───────┬─────────┘
-                │ 1. PDF Upload
-                ▼
-        ┌─────────────────┐
-        │    FastAPI      │  Backend Orchestrator
-        └───────┬─────────┘
-                │
-                │ 2. OCR + Layout Extraction
-                ▼
-        ┌─────────────────┐
-        │ PaddleOCR-VL     │
-        │ (Local/API)      │
-        └───────┬─────────┘
-                │ Output: structured JSON
-                ▼
-        ┌─────────────────┐
-        │ Markdown Builder │
-        └───────┬─────────┘
-                │
-                │ 3. Semantic Enhancement
-                ▼
-        ┌──────────────────┐
-        │ ERNIE 4.5 / 5 AI │ Summaries, insights, Q&A
-        └───────┬──────────┘
-                │ Output: enriched markdown + metadata
-                ▼
-        ┌──────────────────┐
-        │ Static Site Maker │ HTML + CSS generation
-        └───────┬──────────┘
-                │ 4. Deploy
-                ▼
-        ┌──────────────────┐
-        │ GitHub Pages Host │
-        └──────────────────┘
+```mermaid
+graph TD
+    User[User Upload PDF] --> API[FastAPI Backend]
+    API --> M0[Module 0: Grounder]
+    
+    subgraph "Reasoning Pipeline (Sequential)"
+        M0 -->|Document| M1[Module 1: Segmenter]
+        M1 -->|Rhetorical Map| M2[Module 2: Claim Extractor]
+        M2 -->|Claims| M3[Module 3: Evidence Linker]
+        M1 -->|Sections| M3
+        M2 -->|Claims| M4[Module 4: Assumption Miner]
+        M3 -->|Evidence Graph| M5[Module 5: Gap Analyzer]
+        M4 -->|Assumptions| M5
+        M5 -->|Signals| M6[Module 6: Validation Questions]
+    end
+    
+    M6 -->|Report| API
+    API --> Frontend[Web UI (Critique View)]
 ```
 
----
+## 🧩 Component Breakdown
 
-## 🔧 Component Breakdown
+### 1. Document Grounder (Perception Layer)
+*   **Tech**: `pdf2image`, `PaddleOCR-VL` (PP-Structure).
+*   **Role**: Non-AI parsing.
+*   **Data**: `backend.reasoning_pipeline.schemas.Document`.
 
-### **Frontend Layer**
+### 2. The Reasoning Engine (Intelligence Layer)
+*   **Tech**: `ERNIE 4.5/5` (via Novita AI).
+*   **Role**: Stateless transformation of text -> structured insights.
+*   **Orchestration**: Python `modules/` (to be implemented).
+*   **Data**: `ClimateEvidenceTable`, `AssumptionLedger`.
 
-* PDF upload form
-* Status updates (progress msgs)
-* Link to generated knowledge site
-* Tech: HTML/CSS/JS → Progressive enhancement later
+### 3. The API (Service Layer)
+*   **Tech**: `FastAPI`, `Uvicorn`.
+*   **Endpoints**:
+    *   `POST /analyze`: Triggers the pipeline (Async Background Task).
+    *   `GET /analyze/{job_id}`: Polls status.
+    *   `GET /report/{job_id}`: Returns final JSON artifact.
 
-### **Backend Layer** (FastAPI)
+## 💾 Data Persistence
+*   **v1**: In-memory / Filesystem (`output/{job_id}/*.json`).
+*   **No Database** required for v1 prototype.
 
-| Module             | Responsibility                                   |
-| ------------------ | ------------------------------------------------ |
-| `ocr_pipeline/`    | Run PaddleOCR-VL & return layout JSON            |
-| `parser/`          | Convert JSON to structured Markdown              |
-| `ernie_pipeline/`  | Summaries, TL;DR, ELI5, insights, Q&A generation |
-| `static_renderer/` | Build site using Jinja2 templates                |
-| `deploy/`          | Push to GitHub repo (Pages)                      |
-| `utils/`           | Helpers: file mgmt, caching, logging             |
-
-### **AI Layer**
-
-* **PaddleOCR-VL** for document layout intelligence
-* **ERNIE 4.5/5** for:
-
-  * Content understanding
-  * Summaries, simplification
-  * Key contributions, limitations
-  * Context-aware Q&A
-
-### **Hosting Layer**
-
-* GitHub Pages for final site
-* Optional: local download as `.zip`
-
----
-
-## 🔄 Data Flow Model
-
-1️⃣ **Upload**: User sends PDF → FastAPI stores temporarily
-2️⃣ **Extract**: PaddleOCR-VL → text blocks, headings, tables, math
-3️⃣ **Structure**: Markdown builder organizes sections + hierarchy
-4️⃣ **Enhance**: ERNIE adds:
-
-* TL;DR
-* Key insights
-* Beginner explanations
-* Metadata
-  5️⃣ **Generate**: HTML/CSS site created per template
-  6️⃣ **Deploy**:
-* Push to GitHub repo → GitHub Pages URL returned
-
----
-
-## 📦 Final Output Format
-
-Each generated site contains:
-
-```
-site/
-├── index.html
-├── content/
-│   ├── sections.html
-│   └── figures/
-├── assets/
-│   ├── styles.css
-│   └── scripts.js
-└── metadata.json
-```
-
----
-
-## ⚙️ Future Enhancements
-
-* Full RAG-based Q&A
-* Multi-paper comparison graph
-* User accounts + saved papers
-* Local deployment option (privacy mode)
-
----
-
-Readify’s architecture balances **hackathon deliverability** with **long-term scalability**. 🚀
+## 🛡 Security & Config
+*   **Env Vars**: `NOVITA_API_KEY` (managed by `python-dotenv`).
+*   **GitIgnore**: All `output/` and `.env` files.

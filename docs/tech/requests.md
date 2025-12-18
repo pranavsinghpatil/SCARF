@@ -1,7 +1,7 @@
 # Requests: The HTTP Client
 
 **Role**: The bridge to the outside world.
-Readify uses `requests` to talk to:
+SCARF uses `requests` to talk to:
 1.  **Novita AI** (for ERNIE models).
 2.  **GitHub API** (for deployment).
 

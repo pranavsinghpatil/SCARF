@@ -1,7 +1,7 @@
-# Python in Readify
+# Python in SCARF
 
 **Why Python?**
-Python is the undisputed king of AI and Data Science. For Readify, it is the glue that binds OCR (PaddlePaddle), LLMs (API calls), and Web Serving (FastAPI) together.
+Python is the undisputed king of AI and Data Science. For SCARF, it is the glue that binds OCR (PaddlePaddle), LLMs (API calls), and Web Serving (FastAPI) together.
 
 ## 🚀 Advanced Techniques Used
 
@@ -24,7 +24,7 @@ class PaperMetadata(BaseModel):
 *   **IDE Support**: VS Code knows exactly what fields exist.
 
 ### 2. Asynchronous Programming (`async`/`await`)
-Readify is I/O bound. We wait for:
+SCARF is I/O bound. We wait for:
 *   OCR to finish (CPU/GPU bound, but often offloaded)
 *   ERNIE API to respond (Network bound)
 *   File writes
@@ -89,7 +89,7 @@ PDF_DIR = BASE_DIR / "uploads" / "pdfs"
 PDF_DIR.mkdir(parents=True, exist_ok=True)
 ```
 
-## 🧠 DSA & Problem Solving in Readify
+## 🧠 DSA & Problem Solving in SCARF
 
 *   **Tree Traversal**: A research paper is a tree (Title -> Sections -> Subsections -> Paragraphs). We parse this hierarchy to generate the Table of Contents.
 *   **String Matching**: Fuzzy matching is used to link citations `[1]` to the bibliography.

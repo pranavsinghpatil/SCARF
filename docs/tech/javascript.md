@@ -1,4 +1,4 @@
-# JavaScript in Readify
+# JavaScript in SCARF
 
 **Philosophy**: Keep it simple.
 We are **not** building a Single Page Application (SPA). We don't need React, Vue, or Angular.

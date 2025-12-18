@@ -1,6 +1,6 @@
-# Readify Setup Guide
+# SCARF Setup Guide
 
-This document explains how to set up Readify locally for development.
+This document explains how to set up the SCARF (Scientific Claim–Assumption–Rationale Framework) system locally.
 
 Tone: **developer-friendly, practical, copy-paste ready.**
 
@@ -153,7 +153,7 @@ This function will be wrapped by higher-level helpers (e.g. `summarize_paper`, `
 
 ## 6️⃣ Setting up PaddleOCR-VL
 
-Readify uses **PaddleOCR / PaddleOCR-VL** for document layout-aware extraction.
+SCARF uses **PaddleOCR / PaddleOCR-VL** for document layout-aware extraction.
 
 Basic steps:
 
@@ -208,7 +208,7 @@ These will show available endpoints:
 
 ## 8️⃣ Frontend Setup (Basic Version)
 
-Initially, Readify can use:
+Initially, SCARF can use:
 
 * A simple HTML form (in `frontend/templates/index.html`)
 * Served directly by FastAPI using Jinja2
@@ -236,7 +236,7 @@ Requirements:
 * A GitHub repo (e.g., `readify-sites`)
 * Personal Access Token with `repo` permissions
 
-Readify will:
+SCARF will:
 
 * Generate a static site folder for each paper
 * Commit & push it under a specific branch (`gh-pages` or `main` depending on your setup)
@@ -277,4 +277,4 @@ You’re good if:
 
 ---
 
-You are now ready to start wiring the **PDF → OCR → ERNIE → Site** pipeline. 🚀
+You are now ready to start wiring the **PDF → OCR → Reasoning → Critique** pipeline. 🚀

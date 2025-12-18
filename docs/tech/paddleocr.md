@@ -1,4 +1,4 @@
-# PaddleOCR in Readify
+# PaddleOCR in SCARF
 
 **Why PaddleOCR?**
 PaddleOCR (by Baidu) is currently one of the best open-source OCR tools, especially for:
@@ -13,7 +13,7 @@ PaddleOCR isn't just one model; it's a pipeline of three:
 2.  **Text Direction Classifier**: Checks if text is rotated (0°, 90°, 180°).
 3.  **Text Recognition (CRNN)**: Reads the actual characters in the box.
 
-## 🛠 Implementation in Readify
+## 🛠 Implementation in SCARF
 
 We use the `paddleocr` Python package.
 
@@ -58,7 +58,7 @@ OCR is slow.
 *   **Batching**: Process pages in parallel if GPU is available.
 
 ## 🚀 Next Level: PP-Structure
-For Readify, we specifically look into **PP-Structure**, a module of PaddleOCR designed for:
+For SCARF, we specifically look into **PP-Structure**, a module of PaddleOCR designed for:
 *   Table Recognition (rebuilding Excel/CSV from image tables).
 *   Layout Recovery (identifying Header, Footer, Figure, Text).
 

@@ -1,54 +1,26 @@
-# Documentation Index
+# SCARF Documentation Index
 
-Welcome to the **Readify** documentation hub. This index provides a clear guide to all project-related documents, so you can quickly navigate to the information you need.
+**Scientific Claim–Assumption–Rationale Framework**
 
----
+## 📚 Core Research Documents
+*   [**Manifesto**](scarf/MANIFESTO.md): The core research statement and vision. "We do not judge truth; we judge alignment."
+*   [**System Workflow**](WORKFLOW.md): The high-level data flow.
+*   [**Evaluation Strategy**](scarf/evaluation/strategy.md): How we measure success without "truth" labels.
 
-## 📚 Repository Docs Overview
+## ⚙️ System Modules (The Reasoning Pipeline)
+The SCARF pipeline is composed of 6 isolated modules:
+1.  [**Module 0: Document Grounder**](scarf/modules/0_grounder.md) (The Foundation)
+2.  [**Module 1: Rhetorical Segmenter**](scarf/modules/1_segmenter.md) (The Map)
+3.  [**Module 2: Claim Extractor**](scarf/modules/2_extractor.md) (The Miner)
+4.  [**Module 3: Evidence Linker**](scarf/modules/3_evidence.md) (The Forensic)
+5.  [**Module 4: Assumption Miner**](scarf/modules/4_assumptions.md) (The Deep Reader)
+6.  [**Module 5 & 6: Gap Analyzer & Validation**](scarf/modules/5_gaps.md) (The Critique)
 
-| File                      | Description                                                         | Purpose                                       |
-| ------------------------- | ------------------------------------------------------------------- | --------------------------------------------- |
-| **README.md**             | Project introduction, key features, tech stack, structure           | First look at Readify & what it does          |
-| **/docs/ABOUT.md**        | Mission, motivation, user focus, impact                             | Why Readify exists and who it helps           |
-| **/docs/ARCHITECTURE.md** | System components, data flow, infrastructure design                 | Understand how everything works underneath    |
-| **/docs/SETUP.md**        | Installation, environment setup, API configuration, running locally | Get Readify installed and running fast        |
-| **/docs/WORKFLOW.md**     | Full pipeline: PDF → OCR → AI → Site → Deploy                       | Step-by-step logic of the product behavior    |
-| **/docs/PROMPTS.md**      | ERNIE prompt templates and usage rules                              | Structured AI enrichment with quality control |
-| **/docs/HACKATHON.md**    | Official challenge info, resources, tutorials, tool links           | Ensure submission meets contest requirements  |
+## 🛠 Technical Implementation
+*   [**Architecture**](ARCHITECTURE.md): System-level diagram and stack.
+*   [**Schemas**](../backend/reasoning_pipeline/schemas.py): Pydantic models defining the data contract.
+*   [**Tech Stack Handbook**](tech/README.md): Detailed guides on Python, FastAPI, PaddleOCR, etc.
 
----
-
-## 🧭 Recommended Reading Order
-
-If you're new and want to get up to speed fast:
-1️⃣ README.md — Big picture introduction
-2️⃣ ABOUT.md — Understand the goals & users
-3️⃣ ARCHITECTURE.md — Learn the system layout
-4️⃣ WORKFLOW.md — Follow the processing steps
-5️⃣ SETUP.md — Prepare your local development environment
-6️⃣ PROMPTS.md — How AI magic will work
-
-Hackathon planning:
-→ Check **HACKATHON.md** for rules, APIs, tutorials, and track selection
-
----
-
-## 🛠 Development Notes
-
-* Documentation will evolve during implementation
-* All updates will remain consistent with the architecture & workflow
-* Additional docs will be added as needed:
-
-  * DEMO.md (video script & flow)
-  * CONTRIBUTING.md (repo collaboration standards)
-  * LICENSE (open-source license)
-
----
-
-## 💡 Where to start for contributions?
-
-Begin with the **OCR pipeline** and **Markdown parser**, using SETUP.md & WORKFLOW.md as guides.
-
----
-
-Feel free to explore and help build the future of research accessibility with Readify! 🚀
+## 🚀 Guides
+*   [**Setup Guide**](SETUP.md): Installation and local dev setup.
+*   [**Hackathon Context**](HACKATHON.md): Original challenge requirements.

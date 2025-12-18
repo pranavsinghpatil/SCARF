@@ -1,7 +1,7 @@
 # GitHub Pages Deployment
 
 **Why GitHub Pages?**
-It's free, fast, and integrates natively with our source code. Since Readify generates **static** HTML/CSS/JS, we don't need a complex server like AWS or Heroku.
+It's free, fast, and integrates natively with our source code. Since SCARF generates **static** HTML/CSS/JS, we don't need a complex server like AWS or Heroku.
 
 ## 🚀 The Deployment Flow
 

@@ -1,95 +1,42 @@
-# Readify
+# SCARF: Scientific Claim–Assumption–Rationale Framework
 
-Transform research PDFs into clean, interactive, AI‑enhanced knowledge sites.
-
----
-
-## 🚀 Project Vision
-
-Readify makes research accessible. Upload any research PDF and get a beautifully structured website with:
-
-* Semantic summaries
-* Beginner‑friendly explanations
-* Section navigation
-* Q&A on the content
-* Ready‑to‑publish GitHub Pages output
+> **A framework for structured reasoning over scientific documents.**
 
 ---
 
-## 🔍 Problem Statement
+## 🔬 The Mission
+**SCARF** investigates whether automated systems can assist peer review by structurally decomposing scientific papers.
+It is **not** a "Chat with PDF" tool. It is a **Decomposition Engine**.
 
-Research papers are long, dense, and hard to understand for beginners. PDFs are not mobile‑friendly, not searchable in meaningful ways, and lack interactive exploration tools.
+## 🔴 The Problem
+Manual peer review is slow, inconsistent, and biased. Even experts struggle to critically read papers outside their niche because:
+*   Claims are not explicitly labeled.
+*   Evidence is distributed across sections.
+*   Assumptions are often unstated.
 
-**Readify bridges this gap using AI + layout‑aware extraction.**
+## ✅ The Solution
+SCARF decomposes a paper into four interpretable artifacts:
 
----
-
-## ✨ Key Features
-
-* 📄 Accurate PDF layout extraction (headings, tables, equations)
-* 🧠 AI‑generated TL;DR, key contributions, limitations
-* 🎓 "Explain Like I’m a Student" simplified explanations
-* 🔍 Ask questions and get contextual answers
-* 🌐 Auto‑generated static website (GitHub Pages)
-* 🔗 Sharable links to each section
-* 📱 Mobile‑friendly reading experience
-
----
-
-## 🧩 Tech Stack
-
-* **Python** – main backend
-* **FastAPI / Flask** – app API
-* **PaddleOCR‑VL** – PDF text + layout extraction
-* **ERNIE 4.5 / 5** – summarization, insights, Q&A
-* **Jinja2** – HTML templating
-* **GitHub Pages** – hosting for generated sites
-* **JS/CSS** – lightweight web UI for navigation
+1.  **Claim–Evidence Table**: Mapping declarative statements to their supporting data.
+2.  **Assumption Ledger**: Surfacing implicit dependencies (Data, Model, Evaluation).
+3.  **Gap Signals**: Identifying unsupported claims or missing validations.
+4.  **Validation Questions**: Suggesting questions that would test the paper's rigor.
 
 ---
 
-## 🗂️ Repository Structure
-
-```
-readify/
-├── backend/
-│   ├── ocr_pipeline/
-│   ├── ernie_pipeline/
-│   ├── api/
-│   └── utils/
-├── frontend/
-│   ├── templates/
-│   └── static/
-├── docs/
-│   ├── ABOUT.md
-│   ├── ARCHITECTURE.md
-│   ├── SETUP.md
-│   ├── WORKFLOW.md
-│   ├── PROMPTS.md
-│   └── ROADMAP.md
-└── README.md
-```
+## 🛠 Tech Stack
+*   **Perception**: `PaddleOCR-VL` (PP-Structure) for layout-aware parsing.
+*   **Reasoning**: `ERNIE 4.5/5` (via Novita AI) for logic extraction.
+*   **Orchestration**: Python / FastAPI.
 
 ---
 
-## 🏁 Status
+## 📂 Documentation
 
-Initialization Phase – Documentation & architecture first.
-
----
-
-## 📌 Next Steps
-
-* Complete detailed documentation in `/docs`
-* Setup full environment & dependency guides
-* Build OCR → Markdown pipeline
-* Add ERNIE enrichment modules
-* UI + deployment automation
+*   [**The SCARF Manifesto**](docs/scarf/MANIFESTO.md) (Read this first)
+*   [**System Workflow**](docs/WORKFLOW.md)
+*   [**Tech Handbook**](docs/tech/README.md)
 
 ---
 
-## 📧 Contact
-
-Built solo for the **ERNIE AI Developer Challenge**.
-
-> Making research accessible to everyone.
+> *SCARF does not judge "Truth". It judges "Consistency".*

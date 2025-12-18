@@ -1,7 +1,7 @@
 # Jinja2: Static Site Generation
 
 **Why Jinja2?**
-Readify generates **static websites**. We don't want to run a Python backend to serve the final paper. We want a folder of HTML/CSS/JS that can be hosted anywhere (GitHub Pages, Netlify, S3).
+SCARF generates **static websites**. We don't want to run a Python backend to serve the final paper. We want a folder of HTML/CSS/JS that can be hosted anywhere (GitHub Pages, Netlify, S3).
 Jinja2 is the industry-standard template engine for Python.
 
 ## 🎨 How it Works

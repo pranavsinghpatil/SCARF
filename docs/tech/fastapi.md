@@ -1,4 +1,4 @@
-# FastAPI in Readify
+# FastAPI in SCARF
 
 **Why FastAPI?**
 FastAPI is modern, fast (high performance), and easy to use. It's built on top of Starlette for the web parts and Pydantic for the data parts.
@@ -58,11 +58,14 @@ FastAPI generates Swagger UI (`/docs`) and ReDoc (`/redoc`) automatically.
 *   **Swagger UI**: Interactive. We use it to test our API endpoints manually.
 *   **ReDoc**: Clean documentation for sharing.
 
-## 🏗 Structure in Readify
+## 🏗 Structure in SCARF
+
+## 🏗 Structure in SCARF
 
 *   `backend/api/main.py`: The entry point. Defines the `app`.
 *   `backend/api/routers/`: Splits routes into modules (e.g., `upload.py`, `query.py`).
-*   `backend/api/schemas.py`: Pydantic models.
+*   `backend/reasoning_pipeline/`: Core logic modules.
+*   `backend/reasoning_pipeline/schemas.py`: The Pydantic Contracts.
 
 ## 🚀 Performance Tips
 *   **Uvicorn**: We run FastAPI with Uvicorn, an ASGI server.

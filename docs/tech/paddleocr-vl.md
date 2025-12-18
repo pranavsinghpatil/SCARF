@@ -14,7 +14,7 @@ It's the process of segmenting a document image into regions:
 *   Header/Footer
 *   Reference
 
-For Readify, this is **critical**. We don't just want to dump text; we want to recreate the *structure* of the paper.
+For SCARF, this is **critical**. We don't just want to dump text; we want to recreate the *structure* of the paper.
 
 ## 🛠 How we use PP-Structure
 
@@ -43,7 +43,7 @@ One of the hardest parts of OCR is tables. PP-Structure detects a table, then us
 2.  Recognize text in each cell.
 3.  **Output HTML**: It actually gives us `<table><tr><td>...` code!
 
-**In Readify:**
+**In SCARF:**
 We take this HTML and inject it directly into our Jinja2 templates. This means tables in the PDF become responsive HTML tables on the website.
 
 ## 🧠 Vision-Language Models (ERNIE-Layout / LayoutXLM)
@@ -55,7 +55,7 @@ For even smarter understanding, we can use **ERNIE-Layout**.
 
 We use this to extract metadata (Title, Author, Date) accurately from the first page.
 
-## 🚀 Implementation Strategy for Readify
+## 🚀 Implementation Strategy for SCARF
 
 1.  **Page 1**: Run KIE (Key Information Extraction) to get metadata.
 2.  **All Pages**: Run Layout Analysis to split into blocks.
