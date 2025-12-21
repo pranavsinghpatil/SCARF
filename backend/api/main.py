@@ -39,4 +39,19 @@ async def get_status(job_id: str):
 @app.get("/report/{job_id}")
 async def get_report(job_id: str):
     # Retrieve result from disk/memory
-    return {"message": "Report generation not fully wired yet."}
+    job = JOBS.get(job_id)
+    if not job or "result" not in job:
+        return JSONResponse(status_code=404, content={"message": "Report not ready"})
+    return job["result"]
+
+# Mount Frontend
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+# Mount Static Assets (CSS, JS)
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+
+# Serve Index.html
+@app.get("/")
+async def read_index():
+    return FileResponse('frontend/templates/index.html')
