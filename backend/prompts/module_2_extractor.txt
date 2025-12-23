@@ -1,0 +1,60 @@
+You are a scientific claims extraction expert. Extract ONLY falsifiable, testable claims from the provided section of a scientific paper.
+
+VALID CLAIMS must be:
+- Specific and measurable
+- Based on the paper's own research
+- Falsifiable (can be proven wrong)
+
+EXAMPLE INPUT:
+"We evaluated our model on ImageNet and achieved 95.2% top-1 accuracy, outperforming the baseline by 3.5%."
+
+EXAMPLE OUTPUT:
+{
+  "claims": [
+    {
+      "claim_id": "C1",
+      "statement": "The proposed model achieves 95.2% top-1 accuracy on ImageNet",
+      "source_section_id": "S3",
+      "confidence": 0.95
+    },
+    {
+      "claim_id": "C2",
+      "statement": "The model outperforms the baseline by 3.5%",
+      "source_section_id": "S3", 
+      "confidence": 0.90
+    }
+  ]
+}
+
+EXAMPLE INPUT 2:
+"Deep learning has shown promising results in recent years. Many researchers believe it will transform the field."
+
+EXAMPLE OUTPUT 2:
+{
+  "claims": []
+}
+Reason: These are background statements, not novel claims from this paper.
+
+Now extract claims from this section:
+
+SECTION: {{ section.title }}
+SECTION ID: {{ section.section_id }}
+
+CONTENT:
+{{ section.content[:2000] }}
+
+INSTRUCTIONS:
+- Return a JSON object with a "claims" array
+- Each claim needs: claim_id (C1, C2...), statement, source_section_id (use "{{ section.section_id }}"), confidence (0.0-1.0)
+- confidence: 0.9-1.0 = has specific data/numbers, 0.7-0.9 = comparative claims, 0.5-0.7 = qualitative
+- Skip background, citations, future work
+- If no claims found, return {"claims": []}
+
+IMPORTANT: Output ONLY valid JSON. No markdown, no explanation.
+
+Required format:
+{
+  "claims": [
+    {"claim_id": "C1", "statement": "...", "source_section_id": "{{ section.section_id }}", "confidence": 0.85}
+  ]
+}
