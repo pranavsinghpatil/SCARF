@@ -21,7 +21,11 @@ class ValidationSynthesizer:
         report_entries = []
         logging.info("Starting Validation Synthesis")
         
-        for gap_entry in gap_analysis.analysis:
+        total = len(gap_analysis.analysis)
+        for idx, gap_entry in enumerate(gap_analysis.analysis):
+            if hasattr(self, 'progress_callback') and self.progress_callback:
+                self.progress_callback(f"Generating Questions for Claim {idx+1}/{total}...")
+
             if not gap_entry.signals:
                 continue
                 
@@ -34,7 +38,11 @@ class ValidationSynthesizer:
             )
 
             try:
-                response_text = self.ernie.call(prompt, system="Generate constructive research questions.")
+                response_text = self.ernie.call(
+                    prompt,
+                    system="Generate constructive research questions.",
+                    temperature=0.5  # Higher for creative questions
+                )
                 clean_json = repair_json(response_text)
                 
                 data = json.loads(clean_json)
@@ -54,7 +62,7 @@ class ValidationSynthesizer:
                 if questions:
                     report_entries.append(ClaimValidation(claim_id=gap_entry.claim_id, questions=questions))
             except Exception as e:
-                logging.error(f"Validation gen failed for {gap_entry.claim_id}: {e}")
+                logging.warning(f"Validation gen failed for {gap_entry.claim_id}: {e}")
                 pass
 
         return ValidationReport(report=report_entries)

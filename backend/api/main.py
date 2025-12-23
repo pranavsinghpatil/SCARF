@@ -13,6 +13,17 @@ load_dotenv()
 
 app = FastAPI(title="SCARF API", description="Scientific Claim-Assumption-Rationale Framework")
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    # Allow localhost on any port (regex)
+    allow_origin_regex="http://(localhost|127\.0\.0\.1):[0-9]+", 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # In-memory job store for hackathon (use Redis in prod)
 JOBS = {}
 
@@ -48,14 +59,7 @@ async def get_report(job_id: str):
         return JSONResponse(status_code=404, content={"message": "Report not ready"})
     return job["result"]
 
-# Mount Frontend
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-
-# Mount Static Assets (CSS, JS)
-app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
-
-# Serve Index.html
+# API Root
 @app.get("/")
-async def read_index():
-    return FileResponse('frontend/templates/index.html')
+async def root():
+    return {"message": "SCARF Reasoning Engine API is Online. Visit /docs for Swagger UI.", "status": "active"}
