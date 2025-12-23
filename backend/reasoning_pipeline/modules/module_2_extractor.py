@@ -13,23 +13,29 @@ class ClaimExtractor:
     """
     def __init__(self, ernie_client):
         self.ernie = ernie_client
-        prompt_path = os.path.join(os.path.dirname(__file__), '../../prompts/module_2_claims.txt')
+        prompt_path = os.path.join(os.path.dirname(__file__), '../../prompts/module_2_extractor.txt')
         with open(prompt_path, 'r') as f:
             self.template = Template(f.read())
 
     def run(self, doc: Document, rhetorical_map: RhetoricalMap) -> ClaimList:
         all_claims = []
         
-        # Target only high-value sections for claims
-        target_roles = ["method", "results", "discussion", "abstract"] # Abstract is distinct in some papers
+        # Build role lookup with proper enum value access
+        role_lookup = {r.section_id: r.role.value for r in rhetorical_map.roles}
         
-        role_lookup = {r.section_id: r.role.lower() for r in rhetorical_map.roles}
+        logging.info(f"Extracting claims from {len(doc.sections)} sections")
 
-        for section in doc.sections:
+        total = len(doc.sections)
+        for idx, section in enumerate(doc.sections):
+            if hasattr(self, 'progress_callback') and self.progress_callback:
+                self.progress_callback(f"Extracting Claims from Section {idx+1}/{total}...")
+                
             role = role_lookup.get(section.section_id, "body")
             
-            # Heuristic: If we treated pages as sections in Module 0, 'abstract' might be P1
-            if role not in target_roles and section.section_id != "P1":
+            # Skip only clearly irrelevant sections
+            skip_roles = ["limitations"]  # Very restrictive - almost all sections are checked
+            if role in skip_roles:
+                logging.info(f"Skipping section {section.section_id} (role: {role})")
                 continue
 
             schema_str = json.dumps(ClaimList.model_json_schema(), indent=2)
@@ -40,8 +46,16 @@ class ClaimExtractor:
             )
 
             try:
-                # Add explicit system instruction for extraction
-                response_text = self.ernie.call(prompt, system="Extract only explicit novel claims. Return empty list if none.")
+                # Expert system prompt for claims extraction
+                system_prompt = ("You are a scientific claims extraction expert. "
+                                "Extract ONLY falsifiable, testable claims from scientific papers. "
+                                "Ignore background statements and citations. Be precise and evidence-focused.")
+                
+                response_text = self.ernie.call(
+                    prompt,
+                    system=system_prompt,
+                    temperature=0.2  # Low temperature for precision
+                )
                 clean_json = repair_json(response_text)
                 
                 # Robust parsing
@@ -60,4 +74,5 @@ class ClaimExtractor:
                 logging.error(f"Module 2 Error on {section.section_id}: {e}")
                 pass
 
+        logging.info(f"Module 2 complete: Extracted {len(all_claims)} total claims from {len(doc.sections)} sections")
         return ClaimList(claims=all_claims)

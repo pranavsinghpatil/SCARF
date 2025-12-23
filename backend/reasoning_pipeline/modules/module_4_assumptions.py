@@ -30,7 +30,10 @@ class AssumptionMiner:
         if len(context_text) > 6000:
             context_text = context_text[:6000]
         
-        for claim in claims.claims:
+        total_c = len(claims.claims)
+        for idx_c, claim in enumerate(claims.claims):
+            if hasattr(self, 'progress_callback') and self.progress_callback:
+                self.progress_callback(f"Mining Assumptions for Claim {idx_c+1}/{total_c}...")
             schema_str = json.dumps(Assumption.model_json_schema(), indent=2)
             
             prompt = self.template.render(
@@ -40,7 +43,11 @@ class AssumptionMiner:
             )
 
             try:
-                response_text = self.ernie.call(prompt, system="Infer implicit scientific assumptions. Be critical.")
+                response_text = self.ernie.call(
+                    prompt,
+                    system="Infer implicit scientific assumptions. Be critical.",
+                    temperature=0.3  # Balanced for assumptions
+                )
                 clean_json = repair_json(response_text)
                 
                 data = json.loads(clean_json)
@@ -64,7 +71,7 @@ class AssumptionMiner:
                     ledger_entries.append(ClaimAssumptions(claim_id=claim.claim_id, assumptions=valid_assumptions))
                     
             except Exception as e:
-                logging.error(f"Assumption mining failed for {claim.claim_id}: {e}")
+                logging.warning(f"Assumption mining failed for {claim.claim_id}: {e}")
                 pass
 
         return AssumptionLedger(ledger=ledger_entries)

@@ -25,7 +25,11 @@ class GapAnalyzer:
         ev_lookup = {link.claim_id: link.evidence for link in evidence.links}
         ass_lookup = {entry.claim_id: entry.assumptions for entry in assumptions.ledger}
         
-        for claim in claims.claims:
+        total_c = len(claims.claims)
+        for idx, claim in enumerate(claims.claims):
+            if hasattr(self, 'progress_callback') and self.progress_callback:
+                self.progress_callback(f"Analyzing Gaps for Claim {idx+1}/{total_c}...")
+            
             ev_list = ev_lookup.get(claim.claim_id, [])
             ass_list = ass_lookup.get(claim.claim_id, [])
             
@@ -43,7 +47,11 @@ class GapAnalyzer:
             )
 
             try:
-                response_text = self.ernie.call(prompt, system="Identify logical gaps. Be objective.")
+                response_text = self.ernie.call(
+                    prompt,
+                    system="Identify logical gaps. Be objective.",
+                    temperature=0.4  # Higher for insightful analysis
+                )
                 clean_json = repair_json(response_text)
                 
                 data = json.loads(clean_json)
@@ -66,7 +74,7 @@ class GapAnalyzer:
                 if signals:            
                     analysis_entries.append(ClaimGaps(claim_id=claim.claim_id, signals=signals))
             except Exception as e:
-                logging.error(f"Gap Analysis failed for {claim.claim_id}: {e}")
+                logging.warning(f"Gap Analysis failed for {claim.claim_id}: {e}")
                 pass
 
         return GapAnalysis(analysis=analysis_entries)
