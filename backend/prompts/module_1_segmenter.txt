@@ -3,7 +3,10 @@ You are given a section of a scientific paper.
 Classify its rhetorical role as one of:
 [background, method, results, discussion, limitations, body].
 
-Strictly return JSON adhering to this schema:
+Strictly return a valid JSON object matching the schema.
+**IMPORTANT**: Output ONLY the JSON instance. Do NOT include the schema definition.
+
+Target Schema:
 {{ schema }}
 
 Section Title: {{ section.title }}

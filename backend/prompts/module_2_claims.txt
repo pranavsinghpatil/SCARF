@@ -5,7 +5,10 @@ A claim is a declarative statement asserting novelty, effectiveness, generalizat
 Rules:
 - Do not extract background statements.
 - Rewrite each claim concisely.
-- Return JSON adhering to this schema:
+- Return a valid JSON object matching the schema.
+- **IMPORTANT**: Output ONLY the JSON instance. Do NOT include the schema definition.
+
+Target Schema:
 {{ schema }}
 
 Section: {{ section.title }}

@@ -7,6 +7,8 @@ If no evidence is found, return "none".
 Strictly return JSON adhering to this schema:
 {{ schema }}
 
+IMPORTANT: Output valid JSON only. No markdown code blocks (```json). No preamble.
+
 Claim:
 {{ claim.statement }}
 
