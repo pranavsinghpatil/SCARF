@@ -45,15 +45,27 @@ def split_documents(documents: List[Document]) -> List[Document]:
     )
     return text_splitter.split_documents(documents)
 
-async def process_file(upload_file: UploadFile) -> List[Document]:
+async def process_file(upload_file: UploadFile, session_id: str = "default") -> List[Document]:
     file_path = await save_upload_file(upload_file)
     try:
         raw_docs = load_document(file_path)
         if not raw_docs:
             return []
+            
+        # IMPORTANT: raw_docs from PyPDFLoader already have 'page' in metadata (0-indexed).
+        # We need to ensure text_splitter preserves this (it usually does) or we handle it.
+        
         chunks = split_documents(raw_docs)
+        
         for chunk in chunks:
             chunk.metadata["source"] = upload_file.filename
+            chunk.metadata["session_id"] = session_id
+            # Ensure page number is present and 1-indexed for humans
+            if "page" in chunk.metadata:
+                 chunk.metadata["page"] = int(chunk.metadata["page"]) + 1
+            else:
+                 chunk.metadata["page"] = "Unknown"
+                 
         return chunks
     except Exception as e:
         raise e

@@ -30,8 +30,8 @@ def test_connection():
         client = get_db_client()
         if client:
             client.admin.command('ping')
-            print("✅ MongoDB Connection Successful")
+            print("yes//// MongoDB Connection Successful")
             return True
     except Exception as e:
-        print(f"❌ MongoDB Connection Failed: {e}")
+        print(f"!!!!! MongoDB Connection Failed: {e}")
         return False
