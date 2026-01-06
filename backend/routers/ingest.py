@@ -10,10 +10,8 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_document(files: list[UploadFile] = File(...), session_id: str = Form("default")):
     provider = LLMProvider()
-    if provider.provider == "openai" and not os.getenv("OPENAI_API_KEY"):
-         raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured.")
-    if provider.provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
-         raise HTTPException(status_code=500, detail="GOOGLE_API_KEY not configured.")
+    if not provider.is_configured():
+         raise HTTPException(status_code=500, detail="LLM API Key not configured.")
          
     results = []
     total_chunks = 0

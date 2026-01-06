@@ -1,75 +1,89 @@
-# Readify - Intelligent Document Question Answering
+# Readify - Document Q&A Assistant
 
-Readify is a modern, RAG-based (Retrieval Augmented Generation) application that allows users to chat with their documents (PDF, DOCX, TXT, MD). Powered by **Gemini 2.5 Flash** and **MongoDB Atlas Vector Search**, it delivers precise, context-aware answers with accurate citations.
-
-![Readify UI](https://via.placeholder.com/800x450.png?text=Readify+Dashboard+Preview)
+Readify is an intelligent RAG (Retrieval-Augmented Generation) pipeline that allows users to upload documents (PDF, DOCX, TXT, MD) and ask context-aware questions. It leverages a modern Next.js frontend and a robust FastAPI backend with MongoDB Atlas Vector Search.
 
 ## 🚀 Features
 
-*   **📄 Multi-Format Ingestion**: Drag & drop support for PDF, Word, Markdown, and Text files.
-*   **🧠 Advanced RAG Pipeline**:
-    *   **Hybrid Retrieval**: uses Vector Search (MongoDB) + Metadata filtering `k=30` -> `top 7`.
-    *   **Smart Parsing**: Recursive chunking with overlap to preserve context.
-    *   **Session Isolation**: Data is separated by user session IDs.
-*   **💬 Premium Chat Interface**:
-    *   Streaming-like experience.
-    *   Rich Markdown rendering (Code blocks, Tables, Lists).
-    *   Precise **Citations** with Page Numbers.
-    *   Dark Mode aesthetics.
-*   **⚡ Performance**:
-    *   Parallel file processing.
-    *   Optimized verification depth.
-    *   Graceful error handling (e.g., API Rate Limits).
+- **Multi-Format Ingestion**: Supports PDF, DOCX, TXT, and Markdown files.
+- **Advanced RAG Pipeline**: Uses similarity search with metadata filtering for precise answers.
+- **Session Management**: Isolated user sessions to prevent data leakage.
+- **Modern UI**: Polished, dark-themed Chat Interface with real-time feedback.
+- **Provider Agnostic**: Configurable to use **OpenAI** or **Gemini** (currently set to Generic/Gemini for assignment).
 
-## 🛠️ Tech Stack
+> [!NOTE]
+> For a detailed technical breakdown, see our [Full Architecture Guide](ARCHITECTURE.md).
 
-*   **Frontend**: Next.js 14, TailwindCSS, TypeScript, Framer Motion, Lucide React.
-*   **Backend**: FastAPI (Python), LangChain, Uvicorn.
-*   **AI/LLM**: Google Gemini 2.5 Flash (`generative-ai` SDK).
-*   **Database**: MongoDB Atlas (Vector Search).
+## 🏗️ Architecture Overview
 
-## 📦 Setup & Installation
+```mermaid
+graph TD
+    User[User] -->|Uploads File| FE[Frontend (Next.js)]
+    User -->|Asks Question| FE
+    
+    FE -->|API Request| BE[Backend API (FastAPI)]
+    
+    subgraph Ingestion Pipeline
+        BE -->|Extract Text| Loader[Document Loader]
+        Loader -->|Split| Chunker[Text Splitter]
+        Chunker -->|Generate| Embed[Embedding Model]
+        Embed -->|Store Vectors| DB[(MongoDB Atlas)]
+    end
+    
+    subgraph RAG Query Pipeline
+        BE -->|Query| DB
+        DB -->|Top-k Chunks| BE
+        BE -->|Context + Prompt| LLM[LLM Service]
+        LLM -->|Answer| BE
+    end
+```
 
-### 1. Prerequisites
-*   Node.js (v18+)
-*   Python (3.10+)
-*   MongoDB Atlas Account (Free Tier is sufficient)
-*   Google Gemini API Key
+## 🛠️ Technology Stack
+
+- **Frontend**: Next.js 14, Tailwind CSS, Lucide Icons, Framer Motion
+- **Backend**: FastAPI, LangChain, PyMongo
+- **Database**: MongoDB Atlas (Vector Search)
+- **AI**: LangChain (OpenAI/Gemini integrations)
+
+## 📦 Installation & Setup
+
+### Prerequisites
+- Node.js 18+
+- Python 3.10+
+- MongoDB Atlas Cluster (Vector Search enabled)
+
+### 1. Clone & Configure
+```bash
+git clone https://github.com/pranavsinghpatil/Readify.git
+cd Readify
+```
 
 ### 2. Backend Setup
 ```bash
-cd backend
-pip install -r requirements.txt
-cp .env.example .env
-```
-*Edit `.env` and add your keys:*
-```ini
-GOOGLE_API_KEY=AIzaSy...
-MONGODB_URI=mongodb+srv://...
-DB_NAME=readify_db
-COLLECTION_NAME=documents
+# Create virtual environment (optional but recommended)
+python -m venv venv
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r backend/requirements.txt
+
+# Configure Environment
+# Copy .env.example to backend/.env and fill in your keys
+copy backend\.env.example backend\.env
 ```
 
 ### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
+cd ..
 ```
 
-### 4. Running the App
-We have provided a convenient launcher script for Windows:
+### 4. Run Application
+Simply double-click `launch.bat` or run:
 ```bash
 .\launch.bat
 ```
-*   **Frontend**: `http://localhost:3000`
-*   **Backend Docs**: `http://localhost:8000/docs`
+The app will open at `http://localhost:3000`.
 
-## 🧪 Testing
-The system includes validation logic for file types and API health.
-To test manually:
-1.  Upload a PDF.
-2.  Ask: *"What is the summary of this document?"*
-3.  Verify the answer and check the generic citations (e.g., `doc.pdf (Page 1)`).
-
----
-*Built for Advanced Full Stack Assignment.*
+## 📄 License
+MIT License. Created by Pranav Patil.

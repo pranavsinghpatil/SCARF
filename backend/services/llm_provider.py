@@ -13,6 +13,9 @@ class LLMProvider:
         self.provider = os.getenv("LLM_PROVIDER", "gemini").lower()
         self.api_key = os.getenv("GOOGLE_API_KEY") if self.provider == "gemini" else os.getenv("OPENAI_API_KEY")
 
+    def is_configured(self):
+        return bool(self.api_key)
+
     def get_embeddings(self):
         if self.provider == "gemini":
             if not os.getenv("GOOGLE_API_KEY"):

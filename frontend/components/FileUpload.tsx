@@ -102,39 +102,41 @@ export function FileUpload({ onUploadComplete, files, onFilesChange, isCompact =
   if (isCompact) {
     return (
       <div 
-        className="glass rounded-xl p-4 w-full max-w-2xl mx-auto transition-all animate-slide-in-up flex flex-col gap-4"
+        className="w-full flex flex-col gap-3 animate-slide-in-up"
       >
-         <div className="flex items-center justify-between">
-             <h3 className="text-sm font-medium text-white flex items-center gap-2">
-                <FileText size={16} className="text-emerald-400" />
-                Active Documents
-                <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-gray-300">{files.length}</span>
+         <div className="flex items-center justify-between px-1">
+             <h3 className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                Active Context ({files.length})
              </h3>
              <button 
                onClick={() => fileInputRef.current?.click()}
-               className="text-xs bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/20 transition-all flex items-center gap-2"
+               className="text-[10px] bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded transition-all flex items-center gap-1 border border-emerald-500/20"
+               title="Upload more files"
              >
-               <Upload size={12} /> Add Files
+               <Upload size={10} /> Add Docs
              </button>
          </div>
 
          {/* File List */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[120px] overflow-y-auto pr-1">
+         <div className="space-y-1 max-h-[150px] overflow-y-auto px-1 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
             {files.map((file, i) => (
-                <div key={i} className="group flex items-center justify-between p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5">
-                    <span className="text-xs text-gray-300 truncate max-w-[80%]" title={file}>{file}</span>
+                <div key={i} className="group flex items-center justify-between p-2 rounded-md bg-white/5 hover:bg-white/10 transition-colors border border-transparent hover:border-white/5">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                        <FileText size={12} className="text-gray-500 shrink-0" />
+                        <span className="text-[12px] text-gray-300 truncate" title={file}>{file}</span>
+                    </div>
                     <button 
                       onClick={() => removeFile(file)}
-                      className="p-1 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="text-gray-600 hover:text-red-100 opacity-100  transition-opacity"
                     >
                         <X size={12} />
                     </button>
                 </div>
             ))}
             {status === 'uploading' && (
-               <div className="flex items-center gap-2 p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
-                   <Loader2 size={12} className="animate-spin text-emerald-400" />
-                   <span className="text-xs text-emerald-400">Processing {processingCount} files...</span>
+               <div className="flex items-center gap-2 p-2 rounded-md bg-emerald-500/5 border border-emerald-500/10">
+                   <Loader2 size={10} className="animate-spin text-emerald-400" />
+                   <span className="text-[10px] text-emerald-400">Processing...</span>
                </div>
             )}
          </div>
@@ -170,9 +172,9 @@ export function FileUpload({ onUploadComplete, files, onFilesChange, isCompact =
                 <Upload className="w-8 h-8 text-emerald-400" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-white tracking-tight">Upload Knowledge Base</h3>
+                <h3 className="text-xl font-semibold text-white tracking-tight">Upload Knowledge Docs</h3>
                 <p className="text-sm text-gray-400 leading-relaxed max-w-[260px] mx-auto">
-                  Drag & drop your documents (PDF, DOCX, TXT) here. Multiple files supported.
+                  Drag & drop your documents (PDF, Markdown, DOCX, TXT) here.<br/> Multiple files supported.
                 </p>
               </div>
             </>

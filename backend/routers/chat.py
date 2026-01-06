@@ -29,12 +29,10 @@ async def chat(request: ChatRequest):
         embedding_key="embedding"
     )
     
-    # 1. Retrieve a small pool of candidates to be fast (k=30)
-    #    We need slightly more than k=5 initially to allow for filtering out other session data,
-    #    but we keep it small to ensure low latency.
+    # 1. Retrieve a larger pool to allow for post-filtering (k=50)
     print(f"--- Query: {request.question} ---")
     print(f"--- Session: {request.session_id} | Filtering for files: {request.filenames} ---")
-    raw_docs = vector_store.similarity_search(request.question, k=30)
+    raw_docs = vector_store.similarity_search(request.question, k=5)
     
     # 2. Filter by session_id for strict isolation
     docs = [
@@ -43,8 +41,8 @@ async def chat(request: ChatRequest):
         and (not request.filenames or doc.metadata.get("source") in request.filenames)
     ]
 
-    # 3. Strict limit to top 7
-    docs = docs[:7]
+    # 3. Limit to top 10 relevant chunks for LLM context
+    docs = docs[:5]
 
     print(f"--- Retrieved {len(docs)} chunks after filtering. ---")
     

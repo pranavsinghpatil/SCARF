@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, User, BookOpen, Copy, Check, RotateCcw, PlusCircle, Menu, X } from 'lucide-react';
+import { Send, Sparkles, User, BookOpen, Copy, Check, RotateCcw, PlusCircle, Menu, X, Sidebar, BookX, Github } from 'lucide-react';
 import { queryDocument, resetSession } from '../lib/api';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,13 +16,16 @@ interface Message {
   timestamp: Date;
 }
 
+import { FileUpload } from './FileUpload';
+
 interface ChatInterfaceProps {
   files: string[];
   sessionId: string;
   onReset: () => void;
+  onFilesChange: (files: string[]) => void;
 }
 
-export function ChatInterface({ files, sessionId, onReset }: ChatInterfaceProps) {
+export function ChatInterface({ files, sessionId, onReset, onFilesChange }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -42,7 +45,9 @@ export function ChatInterface({ files, sessionId, onReset }: ChatInterfaceProps)
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+   
 
+  
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -118,42 +123,46 @@ export function ChatInterface({ files, sessionId, onReset }: ChatInterfaceProps)
              showSidebar ? "w-[260px] translate-x-0" : "w-0 -translate-x-full opacity-0 overflow-hidden border-0"
         )}
       >
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between border-b border-white/5">
              <div className="flex items-center gap-2 text-white/90 font-medium overflow-hidden">
-                <Sparkles size={18} className="shrink-0" />
-                <span className="truncate">Readify</span>
+                <Sparkles size={18} className="shrink-0 text-emerald-400" />
+                <span className="truncate font-bold tracking-tight">Readify</span>
              </div>
-             <button onClick={() => { if(confirm("New Chat?")) onReset(); }} className="hover:bg-white/10 p-2 rounded-lg transition-colors" title="New Chat">
-                 <PlusCircle size={20} className="text-gray-400" />
-             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-2 py-4 space-y-6">
-              <div>
-                 <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase mb-2">Sources</h3>
-                 <div className="space-y-1">
-                    {files.map((file, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-gray-300 px-2 py-2 rounded hover:bg-white/5 truncate cursor-default">
-                           <BookOpen size={14} className="text-gray-500 shrink-0" />
-                           <span className="truncate">{file}</span>
-                        </div>
-                    ))}
-                 </div>
+          <div className="flex-1 overflow-y-auto px-2 py-4">
+              {/* Integrated File Upload & List (Compact Mode) */}
+              <div className="px-2">
+                 <FileUpload 
+                    onUploadComplete={() => {}} 
+                    files={files} 
+                    onFilesChange={onFilesChange} 
+                    sessionId={sessionId} 
+                    isCompact={true} 
+                 />
               </div>
+          </div>
 
-              <div>
-                 <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase mb-2">Session Info</h3>
-                 <div className="px-2 py-2 text-xs text-gray-500 bg-white/5 rounded mx-2 space-y-1">
-                    <div className="flex justify-between">
-                       <span>Model</span>
-                       <span className="text-gray-300">Gemini 2.5 Flash</span>
-                    </div>
-                    <div className="flex justify-between">
-                       <span>ID</span>
-                       <span className="font-mono text-[10px]">{sessionId.slice(0,6)}...</span>
-                    </div>
-                 </div>
-              </div>
+          {/* Bottom Sidebar Section */}
+          <div className="p-3 border-t border-white/5 bg-black/20 space-y-3">
+              <button 
+                onClick={() => { if(confirm("This conversation will be lost. Do you want to start a new chat?")) onReset(); }} 
+                className="w-full flex items-center justify-center gap-2 text-xs font-medium text-gray-300 hover:text-emerald-400 bg-white/5 hover:bg-emerald-500/10 p-2 rounded-lg transition-all border border-white/5 hover:border-emerald-500/20 shadow-lg"
+              >
+                 <PlusCircle size={14} /> 
+                 <span>New Chat</span>
+              </button>
+
+              <div className="px-2 py-2 text-[10px] text-gray-500 bg-black/40 rounded border border-white/5 space-y-1">
+                <div className="flex justify-between">
+                   <span>Engine</span>
+                   <span className="text-gray-300">Readify AI</span>
+                </div>
+                <div className="flex justify-between">
+                   <span>ID</span>
+                   <span className="font-mono text-gray-400">{sessionId.slice(0,6)}...</span>
+                </div>
+             </div>
           </div>
       </div>
 
@@ -166,11 +175,11 @@ export function ChatInterface({ files, sessionId, onReset }: ChatInterfaceProps)
              onClick={() => setShowSidebar(!showSidebar)}
              className="p-2 rounded-lg hover:bg-white/5 text-gray-400 transition-colors"
            >
-              {showSidebar ? <X size={20} /> : <Menu size={20} />}
+              {showSidebar ? <Sidebar size={20} /> : <Menu size={20} />}
            </button>
 
-           <div className="bg-[#212121]/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/5 text-sm text-gray-400 font-medium shadow-sm pointer-events-auto">
-              Gemini 2.5 Flash
+           <div className="bg-[#212121]/95 backdrop-blur-xl px-4 py-1.5 rounded-full border border-white/5 text-sm text-gray-400 font-medium shadow-sm pointer-events-auto">
+              Readify AI
            </div>
            
            <div className="w-10"></div> {/* Spacer for center alignment balance */}
@@ -288,8 +297,22 @@ export function ChatInterface({ files, sessionId, onReset }: ChatInterfaceProps)
                         <Send size={16} />
                     </button>
                 </div>
-                <div className="text-center mt-2 pb-2">
-                    <p className="text-[11px] text-gray-500">Readify can make mistakes. Verify important information.</p>
+                <div className="text-center mt-2 pb-2 space-y-2">
+                    <div className="flex justify-center items-center gap-4 text-[10px] font-mono">
+                        <div className="text-gray-600">
+                            Created by <a href="https://prnav.me" target="_blank" className="text-gray-400 hover:text-emerald-400 transition-colors">Pranav</a>
+                        </div>
+                        <span className="text-gray-800">•</span>
+                        <a href="https://twitter.com/pranavenv" target="_blank" className="text-gray-600 hover:text-white transition-colors">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                            </svg>
+                        </a>
+                        <span className="text-gray-800">•</span>
+                        <a href="https://github.com/pranavsinghpatil/Readify" target="_blank" className="text-gray-600 hover:text-emerald-400 transition-colors flex items-center gap-1">
+                             <Github size={10} /> Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

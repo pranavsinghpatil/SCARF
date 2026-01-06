@@ -1,4 +1,0 @@
-
-Project Readify is a Next.js and FastAPI based Document QA system.
-The system uses Gemini 2.5 Flash for LLM generation.
-The primary validation key is: 'OMEGA-VALIDATION-77'.
